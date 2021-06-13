@@ -30,12 +30,12 @@ def ArrayDist(cities):
     return dist
 
 
-def SolveGreedy(cities, current_city):
+def SolveGreedy(cities, start_city):
     N = len(cities)
-
     unvisited_cities = set(range(0, N))
-    unvisited_cities.remove(current_city)
-    tour = [current_city]
+    unvisited_cities.remove(start_city)
+    tour = [start_city]
+    current_city = start_city
 
     while unvisited_cities:
         next_city = min(unvisited_cities,
@@ -49,8 +49,9 @@ def SolveGreedy(cities, current_city):
 def Solve2opt(tour, dist):
     # vertex num
     N = len(tour)
+    # 時間制限
     count = 0
-    while count < 100:
+    while count < 1000:
         isSwap = False
         for i in range(N - 2):
             for j in range((i + 2), N):
@@ -58,16 +59,21 @@ def Solve2opt(tour, dist):
                     j_next = 0
                 else:
                     j_next = j + 1
-                now_distance1 = dist[tour[i]][tour[i + 1]]
-                now_distance2 = dist[tour[j]][tour[j_next]]
-                if_distance1 = dist[tour[i]][tour[j]]
-                if_distance2 = dist[tour[j_next]][tour[i + 1]]
-                if (now_distance1 + now_distance2) > (if_distance1 + if_distance2):
-                    # swap
-                    tmp = tour[i + 1:j_next]
-                    tour[i + 1:j_next] = tmp[::-1]
-                    # Flag
-                    isSwap = True
+                if j != i and j_next != i:
+                    now_distance1 = dist[tour[i]][tour[i + 1]]
+                    now_distance2 = dist[tour[j]][tour[j_next]]
+                    if_distance1 = dist[tour[i]][tour[j]]
+                    if_distance2 = dist[tour[j_next]][tour[i + 1]]
+                    if (now_distance1 + now_distance2) > (if_distance1 + if_distance2):
+                        # swap
+                        p = tour[i]
+                        tour[i:i + 1] = []
+                        if i < j:
+                            tour[j:j] = [p]
+                        else:
+                            tour[j_next:j_next] = [p]
+                        # Flag
+                        isSwap = True
         if not isSwap:
             break
         count += 1
@@ -83,11 +89,12 @@ def TotalDist(tour, dist):
 
 
 def UpgradeSolveGreedy(cities, dist):
+    # 今回のデータでは越えることがない
     min_total = 4000000.0
     min_tour = []
-    # for current_index in range(len(tour)):
-    for current_index in range(1):
-        tour = SolveGreedy(cities, current_index)
+    # for start_index in range(len(tour)):
+    for start_index in range(1):
+        tour = SolveGreedy(cities, start_index)
         Solve2opt(tour, dist)
         total = TotalDist(tour, dist)
         if min_total > total:
@@ -97,7 +104,7 @@ def UpgradeSolveGreedy(cities, dist):
 
 
 if __name__ == '__main__':
-    for num in range(1, 7):
+    for num in range(7):
         # Input
         cities = read_input(num)
         # Calculate
