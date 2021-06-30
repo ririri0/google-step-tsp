@@ -51,27 +51,21 @@ def Solve2opt(tour, dist):
     N = len(tour)
     # 時間制限
     count = 0
-    while count < 1000:
+    while count < 100:
         isSwap = False
         for i in range(N - 2):
             for j in range((i + 2), N):
-                if j == N - 1:
-                    j_next = 0
-                else:
-                    j_next = j + 1
-                if j != i and j_next != i:
+                if j != N - 1:
                     now_distance1 = dist[tour[i]][tour[i + 1]]
-                    now_distance2 = dist[tour[j]][tour[j_next]]
+                    now_distance2 = dist[tour[j]][tour[j + 1]]
                     if_distance1 = dist[tour[i]][tour[j]]
-                    if_distance2 = dist[tour[j_next]][tour[i + 1]]
-                    if (now_distance1 + now_distance2) > (if_distance1 + if_distance2):
+                    if_distance2 = dist[tour[j + 1]][tour[i + 1]]
+                    if (now_distance1 +
+                            now_distance2) > (if_distance1 +
+                                              if_distance2):
                         # swap
-                        p = tour[i]
-                        tour[i:i + 1] = []
-                        if i < j:
-                            tour[j:j] = [p]
-                        else:
-                            tour[j_next:j_next] = [p]
+                        tmp = tour[i + 1:j + 1]
+                        tour[i + 1:j + 1] = tmp[::-1]
                         # Flag
                         isSwap = True
         if not isSwap:
@@ -104,7 +98,7 @@ def UpgradeSolveGreedy(cities, dist):
 
 
 if __name__ == '__main__':
-    for num in range(7):
+    for num in range(6, 8):
         # Input
         cities = read_input(num)
         # Calculate
