@@ -13,6 +13,8 @@ typedef struct {
   double y;
 } xy;
 
+/* Incompletely
+
 std::vector<xy> load_csv(int num) {
   std::vector<xy> dist_data;
 
@@ -138,13 +140,13 @@ int main() {
     // Input
     std::vector<xy> data = load_csv(i);
     // Calculation
+    int N = data.size();
     double *dist = (double *)malloc(N * N * sizeof(double));
-    ;
 
     for (int i = 0; i < N; i++) {
       for (int j = i; j < N; j++) {
         dist[i * N + j] = dist[j * N + i] =
-            distance(location_data[i], location_data[j]);
+            distance(data[i], data[j]);
       }
     }
     std::vector<int> tour = solve_greedy_all_start_index(data, dist);
@@ -152,3 +154,4 @@ int main() {
     output_data(i, tour);
   }
 }
+*/
